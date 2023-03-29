@@ -10,6 +10,7 @@
             "request": "launch",
             "program": "message handler.py",
             "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/CODE",
             "justMyCode": true
         }
     ]

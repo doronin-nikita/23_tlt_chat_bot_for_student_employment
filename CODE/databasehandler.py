@@ -25,7 +25,7 @@ def get_random_id():
 mykeyboard = kbl.create_keyboard()
 def write_msg_to_user(user_id, text):
 	token = "311b05cafb4ba7002cd5ec05a2f8b6052e79a46e4add3b48a07f6ad8e728b991077ae63019d36a19c0b7b"
-	
+
 	vk = vk_api.VkApi(token=token)
 	vk.method('messages.send', {'user_id': user_id,
                                 'random_id': get_random_id(),
@@ -101,4 +101,10 @@ with connection.cursor() as cursor:
 		msg = disassemble(cursor.fetchall())
 	connection.commit()
 	cursor.close()
+
+	#отредактировать
+	if ((str(msg)=="Приветствую, укажите ваш институт или специальность") or (str(msg)=="Укажите ваш институт или специальность")):
+		mykeyboard = kbl.create_keyboard_INSTITUTS()
+	else:
+		mykeyboard = kbl.create_keyboard()
 	write_msg_to_user(id, str(msg))
