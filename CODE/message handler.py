@@ -20,5 +20,5 @@ print("bot is started...")
 for event in longpoll.listen():
 	if event.type == VkEventType.MESSAGE_NEW:
 		if event.to_me:
-			request = event.text
+			request = event.text #приведение к общему формату соощений (нижний регистр, крайние пробелы, ...) Алкусандр Приб
 			os.system("python3 '"+dir+"/databasehandler.py' " + str(event.user_id)+" "+request + "&")

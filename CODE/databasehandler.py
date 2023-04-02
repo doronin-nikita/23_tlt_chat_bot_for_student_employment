@@ -104,7 +104,7 @@ with connection.cursor() as cursor:
 
 	#отредактировать
 	if ((str(msg)=="Приветствую, укажите ваш институт или специальность") or (str(msg)=="Укажите ваш институт или специальность")):
-		mykeyboard = kbl.create_keyboard_INSTITUTS()
+		mykeyboard = kbl.create_keyboard_inst()
 	else:
 		mykeyboard = kbl.create_keyboard()
 	write_msg_to_user(id, str(msg))
