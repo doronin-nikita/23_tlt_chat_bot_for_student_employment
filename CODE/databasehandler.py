@@ -88,23 +88,30 @@ if text=="?":
 		msg = msg + str(i) + "\n	"
 	write_msg_to_user(id, str(msg))
 
+msg = "error"
+
 with connection.cursor() as cursor:
-	func = "select "+config["signals"]["AddInfo"]+"(%s, %s) as second"
-	proc = config["buttens"]["вакансии"]
-	cursor.execute(func, (id, text))
-	connection.commit()
-	msg = cursor.fetchall()[0]["second"]
-	if msg == config["signals"]["OkSugnall"]:
-		if config["buttens"][text]:
-			proc = config["buttens"][text]
-		cursor.callproc(proc, (id, text))
-		msg = disassemble(cursor.fetchall())
+	cursor.callproc("GetByCompany", (id, text))
+	tbl = cursor.fetchall()
+	msg = disassemble(tbl)
+	if ("null" in tbl[0]):
+		func = "select "+config["signals"]["AddInfo"]+"(%s, %s) as second"
+		proc = config["buttens"]["вакансии"]
+		cursor.execute(func, (id, text))
+		connection.commit()
+		msg = cursor.fetchall()[0]["second"]
+		if msg == config["signals"]["OkSugnall"]:
+			if config["buttens"][text]:
+				proc = config["buttens"][text]
+			cursor.callproc(proc, (id, text))
+			msg = disassemble(cursor.fetchall())
 	connection.commit()
 	cursor.close()
 
 	#отредактировать
-	if ((str(msg)=="Приветствую, укажите ваш институт или специальность") or (str(msg)=="Укажите ваш институт или специальность")):
-		mykeyboard = kbl.create_keyboard_inst()
-	else:
-		mykeyboard = kbl.create_keyboard()
-	write_msg_to_user(id, str(msg))
+if ((str(msg)=="Приветствую, укажите ваш институт или специальность") or (str(msg)=="Укажите ваш институт или специальность")):
+	mykeyboard = kbl.create_keyboard_inst()
+else:
+	mykeyboard = kbl.create_keyboard()
+print(msg)
+write_msg_to_user(id, str(msg))
