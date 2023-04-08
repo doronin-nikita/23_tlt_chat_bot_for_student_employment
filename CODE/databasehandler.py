@@ -7,15 +7,6 @@ import vk_api
 import keyboardlib as kbl
 from vk_api.longpoll import VkLongPoll, VkEventType
 
-a1 = os.path.basename(__file__)
-dir_h = os.path.abspath(__file__).replace(a1, '')
-
-#......................................................
-####### Get Settings ##################################
-#......................................................
-config = CfPs.ConfigParser()
-config.read("'"+dir_h+"settings.ini'")
-print("'"+dir_h+"settings.ini'")
 #......................................................
 ####### SEND FUNCTIONS ################################
 #......................................................
@@ -36,9 +27,13 @@ def write_msg_to_user(user_id, text):
 #......................................................
 ####### Get Settings ##################################
 #......................................................
+#a1 = os.path.basename(__file__)
+#dir_h = os.path.abspath(__file__).replace(a1, '')
+
 config = CfPs.ConfigParser()
-print(config)
-config.read("settings.ini")
+config.read("settings.ini") #config.read("'"+dir_h+"settings.ini'")
+#print("'"+dir_h+"settings.ini'")
+#print(config.items())
 user_host = config["DB settings"]["user_host"]
 user_name = config["DB settings"]["user_name"]
 user_password = config["DB settings"]["user_password"]
@@ -70,8 +65,8 @@ def disassemble(rows):
 	for row in rows:
 		for key, val in row.items():
 			if (val!=None):
-				result += str(key) + " " + str(val) + "\n"
-		result += "\n\n"
+				result += str(key) + " " + str(val)
+		result += "\n"
 	return result
 		
 
@@ -82,36 +77,43 @@ def disassemble(rows):
 id = sys.argv[1]
 text = sys.argv[2]
 
-if text=="?":
-	msg = "доступные комманды:\n	"
-	for i in config["buttens"]:
-		msg = msg + str(i) + "\n	"
-	write_msg_to_user(id, str(msg))
+msg = "каково-либо ответа, на данную комманду получено небыло, рекомендуем свериться с списком комманд"
 
-msg = "error"
+try:
+	if text=="?":
+		msg = "доступные комманды:\n	"
+		for i in config["buttens"]:
+			msg = msg + str(i) + "\n	"
+		write_msg_to_user(id, str(msg))
 
-with connection.cursor() as cursor:
-	cursor.callproc("GetByCompany", (id, text))
-	tbl = cursor.fetchall()
-	msg = disassemble(tbl)
-	if ("null" in tbl[0]):
-		func = "select "+config["signals"]["AddInfo"]+"(%s, %s) as second"
-		proc = config["buttens"]["вакансии"]
-		cursor.execute(func, (id, text))
+	with connection.cursor() as cursor:
+		cursor.callproc("GetByCompany", (id, text))
+		tbl = cursor.fetchall()
+
+		if not("null" in tbl[0]):
+			msg = disassemble(tbl)
+		else:
+			func = "select "+config["signals"]["AddInfo"]+"(%s, %s) as second"
+			proc = config["buttens"]["вакансии"]
+			cursor.execute(func, (id, text))
+			connection.commit()
+			all_ok = cursor.fetchall()[0]["second"]
+			if all_ok == config["signals"]["OkSugnall"]:
+				if text in config["buttens"]:
+					proc = config["buttens"][text]
+					cursor.callproc(proc, (id, text))
+					msg = disassemble(cursor.fetchall())
+			else:
+				msg = all_ok
 		connection.commit()
-		msg = cursor.fetchall()[0]["second"]
-		if msg == config["signals"]["OkSugnall"]:
-			if config["buttens"][text]:
-				proc = config["buttens"][text]
-			cursor.callproc(proc, (id, text))
-			msg = disassemble(cursor.fetchall())
-	connection.commit()
-	cursor.close()
-
+		cursor.close()
+except Exception as ex:
+	msg = "достижение 'тестировщик' - вам удалось найти ошибку, просим вас подробно ее описать тех. поддержке"
+	print("пользователь "+str(id)+" получил ошибку - ")
+	print(ex)
 	#отредактировать
 if ((str(msg)=="Приветствую, укажите ваш институт или специальность") or (str(msg)=="Укажите ваш институт или специальность")):
 	mykeyboard = kbl.create_keyboard_inst()
 else:
 	mykeyboard = kbl.create_keyboard()
-print(msg)
 write_msg_to_user(id, str(msg))
