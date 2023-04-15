@@ -1,11 +1,22 @@
 import pymysql.cursors
-import configparser as CfPs
+import config_path as CfPh
 import sys
 import os
 import random
 import vk_api
 import keyboardlib as kbl
 from vk_api.longpoll import VkLongPoll, VkEventType
+
+#......................................................
+####### Get Settings ##################################
+#......................................................
+config = CfPh.get_config()
+user_host = config["DB settings"]["user_host"]
+user_name = config["DB settings"]["user_name"]
+user_password = config["DB settings"]["user_password"]
+user_db = config["DB settings"]["user_db"]
+user_db_charset = config["DB settings"]["user_db_charset"]
+token = config["api"]["token"]
 
 #......................................................
 ####### SEND FUNCTIONS ################################
@@ -16,7 +27,7 @@ def get_random_id():
 key_board = "0"
 mykeyboard = kbl.key_boards[int(key_board)]()
 def write_msg_to_user(user_id, text):
-	token = "311b05cafb4ba7002cd5ec05a2f8b6052e79a46e4add3b48a07f6ad8e728b991077ae63019d36a19c0b7b"
+	
 
 	vk = vk_api.VkApi(token=token)
 	vk.method('messages.send', {'user_id': user_id,
@@ -24,22 +35,6 @@ def write_msg_to_user(user_id, text):
                                  'message': text,
                                  'attachment': None,
                                  'keyboard': mykeyboard})
-
-#......................................................
-####### Get Settings ##################################
-#......................................................
-#a1 = os.path.basename(__file__)
-#dir_h = os.path.abspath(__file__).replace(a1, '')
-
-config = CfPs.ConfigParser()
-config.read("settings.ini") #config.read("'"+dir_h+"settings.ini'")
-#print("'"+dir_h+"settings.ini'")
-#print(config.items())
-user_host = config["DB settings"]["user_host"]
-user_name = config["DB settings"]["user_name"]
-user_password = config["DB settings"]["user_password"]
-user_db = config["DB settings"]["user_db"]
-user_db_charset = config["DB settings"]["user_db_charset"]
 
 
 #......................................................

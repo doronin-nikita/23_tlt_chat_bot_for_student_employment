@@ -23,8 +23,6 @@ def create_keyboard_institut_setup():
 	keyboard.add_button("ИИиЭБ", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("ИИиДПИ", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("ИП", color=VkKeyboardColor.PRIMARY)
-	keyboard.add_line()
-	keyboard.add_button("Главное меню", color=VkKeyboardColor.PRIMARY)
 	return keyboard.get_keyboard()
 
 def create_keyboard_vakansii_manipulator():
