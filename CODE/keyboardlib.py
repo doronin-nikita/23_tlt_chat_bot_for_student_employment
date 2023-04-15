@@ -1,11 +1,12 @@
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
+
 def create_keyboard_main_menu():
 	keyboard = VkKeyboard(one_time=False)
 	keyboard.add_button("Вакансии", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_line()
 	keyboard.add_button("Организации", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_line()
-	keyboard.add_button("Помощь", color=VkKeyboardColor.PRIMARY)
+	keyboard.add_button("?", color=VkKeyboardColor.PRIMARY)
 	return keyboard.get_keyboard()
 
 def create_keyboard_institut_setup():
@@ -30,8 +31,10 @@ def create_keyboard_vakansii_manipulator():
 	keyboard = VkKeyboard(one_time=False)
 	keyboard.add_button("Следующая", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_line()
-	keyboard.add_button("Кнопка 1", color=VkKeyboardColor.PRIMARY)
-	keyboard.add_button("Кнопка 2", color=VkKeyboardColor.PRIMARY)
-	keyboard.add_line()
+	#keyboard.add_button("Кнопка 1", color=VkKeyboardColor.PRIMARY)
+	#keyboard.add_button("Кнопка 2", color=VkKeyboardColor.PRIMARY)
+	#keyboard.add_line()
 	keyboard.add_button("Главное меню", color=VkKeyboardColor.PRIMARY)
 	return keyboard.get_keyboard()
+
+key_boards = (create_keyboard_main_menu, create_keyboard_vakansii_manipulator, create_keyboard_institut_setup)

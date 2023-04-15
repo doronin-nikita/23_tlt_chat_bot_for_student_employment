@@ -13,7 +13,8 @@ from vk_api.longpoll import VkLongPoll, VkEventType
 def get_random_id():
    return random.getrandbits(31) * random.choice([-1, 1])
 
-mykeyboard = kbl.create_keyboard()
+key_board = "0"
+mykeyboard = kbl.key_boards[int(key_board)]()
 def write_msg_to_user(user_id, text):
 	token = "311b05cafb4ba7002cd5ec05a2f8b6052e79a46e4add3b48a07f6ad8e728b991077ae63019d36a19c0b7b"
 
@@ -65,7 +66,7 @@ def disassemble(rows):
 	for row in rows:
 		for key, val in row.items():
 			if (val!=None):
-				result += str(key) + " " + str(val)
+				result += str(key) + " " + str(val) + "\n"
 		result += "\n"
 	return result
 		
@@ -105,15 +106,16 @@ try:
 					msg = disassemble(cursor.fetchall())
 			else:
 				msg = all_ok
+			cursor.callproc('GetKeyBoard', (id, text))
+			key_board = cursor.fetchall()[0]["key_board"]
+			mykeyboard = kbl.key_boards[int(key_board)]()
 		connection.commit()
 		cursor.close()
+
 except Exception as ex:
 	msg = "достижение 'тестировщик' - вам удалось найти ошибку, просим вас подробно ее описать тех. поддержке"
 	print("пользователь "+str(id)+" получил ошибку - ")
 	print(ex)
 	#отредактировать
-if ((str(msg)=="Приветствую, укажите ваш институт или специальность") or (str(msg)=="Укажите ваш институт или специальность")):
-	mykeyboard = kbl.create_keyboard_inst()
-else:
-	mykeyboard = kbl.create_keyboard()
+	
 write_msg_to_user(id, str(msg))
