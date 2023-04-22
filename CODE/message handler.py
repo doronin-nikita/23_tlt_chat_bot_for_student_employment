@@ -29,4 +29,4 @@ for event in longpoll.listen():
 		if event.to_me:
 			request = event.text #приведение к общему формату соощений (нижний регистр, крайние пробелы, ...) Алкусандр Приб
 			os.system("cd "+CfPh.dir)
-			os.system(prefix+" "+ file_name+ " " + str(event.user_id)+" '"+request + "'"+postfix)
+			os.system(prefix + file_name+ " " + str(event.user_id)+" '"+request + "'"+postfix)
