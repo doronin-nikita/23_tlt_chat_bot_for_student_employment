@@ -35,4 +35,16 @@ def create_keyboard_vakansii_manipulator():
 	keyboard.add_button("Главное меню", color=VkKeyboardColor.PRIMARY)
 	return keyboard.get_keyboard()
 
-key_boards = (create_keyboard_main_menu, create_keyboard_vakansii_manipulator, create_keyboard_institut_setup)
+def create_keyboard_start_setup():
+	keyboard = VkKeyboard(one_time=False)
+	keyboard.add_button("Отключить", color=VkKeyboardColor.PRIMARY)
+	keyboard.add_line()
+	keyboard.add_button("Институты", color=VkKeyboardColor.PRIMARY)
+	return keyboard.get_keyboard()
+
+def create_keyboard_start_bot():
+	keyboard = VkKeyboard(one_time=False)
+	keyboard.add_button("start", color=VkKeyboardColor.PRIMARY)
+	return keyboard.get_keyboard()
+
+key_boards = (create_keyboard_start_setup, create_keyboard_main_menu, create_keyboard_vakansii_manipulator, create_keyboard_institut_setup,create_keyboard_start_bot)

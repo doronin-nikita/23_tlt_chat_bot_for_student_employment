@@ -74,12 +74,15 @@ id = sys.argv[1]
 text = sys.argv[2]
 
 msg = "каково-либо ответа, на данную комманду получено небыло, рекомендуем свериться с списком комманд"
+b = False
 
 try:
-	if text=="?":
-		msg = "доступные комманды:\n	"
+	if (text=="?"):
+		msg = "доступные комманды:\n"
 		for i in config["buttens"]:
-			msg = msg + str(i) + "\n	"
+			msg = msg + str(i) + "\n"
+		for i in config["forced"]:
+			msg = msg + str(i) + "\n"
 		write_msg_to_user(id, str(msg))
 
 	with connection.cursor() as cursor:
@@ -94,7 +97,11 @@ try:
 			cursor.execute(func, (id, text))
 			connection.commit()
 			all_ok = cursor.fetchall()[0]["second"]
-			if all_ok == config["signals"]["OkSugnall"]:
+			if (text in config["forced"]):
+				proc = config["forced"][text]
+				cursor.callproc(proc, (id, text))
+				msg = disassemble(cursor.fetchall())
+			elif (all_ok == config["signals"]["OkSugnall"]):
 				if text in config["buttens"]:
 					proc = config["buttens"][text]
 					cursor.callproc(proc, (id, text))
@@ -103,7 +110,11 @@ try:
 				msg = all_ok
 			cursor.callproc('GetKeyBoard', (id, text))
 			key_board = cursor.fetchall()[0]["key_board"]
-			mykeyboard = kbl.key_boards[int(key_board)]()
+			b = key_board!=-1
+			if (b):
+				mykeyboard = kbl.key_boards[int(key_board)]()
+			else:
+				mykeyboard = kbl.key_boards[4]()
 		connection.commit()
 		cursor.close()
 
@@ -112,5 +123,5 @@ except Exception as ex:
 	print("пользователь "+str(id)+" получил ошибку - ")
 	print(ex)
 	#отредактировать
-	
-write_msg_to_user(id, str(msg))
+if (b)or(text in config["forced"]):
+	write_msg_to_user(id, str(msg))

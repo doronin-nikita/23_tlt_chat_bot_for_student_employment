@@ -27,6 +27,6 @@ print("bot is started...")
 for event in longpoll.listen():
 	if event.type == VkEventType.MESSAGE_NEW:
 		if event.to_me:
-			request = event.text #приведение к общему формату соощений (нижний регистр, крайние пробелы, ...) Алкусандр Приб
+			request = event.text.lower()
 			os.system("cd "+CfPh.dir)
-			os.system(prefix + file_name+ " " + str(event.user_id)+" '"+request + "'"+postfix)
+			os.system(prefix +" "+ file_name+ " " + str(event.user_id)+" '"+request + "'"+postfix)
