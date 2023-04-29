@@ -73,17 +73,16 @@ def disassemble(rows):
 id = sys.argv[1]
 text = sys.argv[2]
 
-msg = "каково-либо ответа, на данную комманду получено небыло, рекомендуем свериться с списком комманд"
+msg = "Каково-либо ответа, на данную комманду получено небыло, рекомендуем свериться с списком комманд"
 b = False
 
 try:
 	if (text=="?"):
-		msg = "доступные комманды:\n"
+		msg = "Доступные команды:\n"
 		for i in config["buttens"]:
-			msg = msg + str(i) + "\n"
+			msg = msg + " * " + str(i) + "\n"
 		for i in config["forced"]:
-			msg = msg + str(i) + "\n"
-		write_msg_to_user(id, str(msg))
+			msg = msg + " * " + str(i) + "\n"
 
 	with connection.cursor() as cursor:
 		cursor.callproc("GetByCompany", (id, text))
@@ -119,7 +118,7 @@ try:
 		cursor.close()
 
 except Exception as ex:
-	msg = "достижение 'тестировщик' - вам удалось найти ошибку, просим вас подробно ее описать тех. поддержке"
+	msg = "Достижение 'тестировщик' - вам удалось найти ошибку, просим вас подробно ее описать тех. поддержке"
 	print("пользователь "+str(id)+" получил ошибку - ")
 	print(ex)
 	#отредактировать

@@ -6,6 +6,7 @@ def create_keyboard_main_menu():
 	keyboard.add_line()
 	keyboard.add_button("Организации", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_line()
+	keyboard.add_button("Сброс", color=VkKeyboardColor.PRIMARY)
 	keyboard.add_button("?", color=VkKeyboardColor.PRIMARY)
 	return keyboard.get_keyboard()
 
