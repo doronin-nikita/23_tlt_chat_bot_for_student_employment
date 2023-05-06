@@ -21,12 +21,20 @@ def write_msg(user_id, message):
     vk.method('messages.send', {'user_id': user_id, 'message': message, "random_id":get_random_id()})
 
 token = "311b05cafb4ba7002cd5ec05a2f8b6052e79a46e4add3b48a07f6ad8e728b991077ae63019d36a19c0b7b"
-vk = vk_api.VkApi(token=token)
-longpoll = VkLongPoll(vk)
-print("bot is started...")
-for event in longpoll.listen():
-	if event.type == VkEventType.MESSAGE_NEW:
-		if event.to_me:
-			request = event.text.lower()
-			os.system("cd "+CfPh.dir)
-			os.system(prefix +" "+ file_name+ " " + str(event.user_id)+" '"+request + "'"+postfix)
+
+def main():
+	try:
+		vk = vk_api.VkApi(token=token)
+		longpoll = VkLongPoll(vk)
+		print("bot is started...")
+		for event in longpoll.listen():
+			if event.type == VkEventType.MESSAGE_NEW:
+				if event.to_me:
+					request = event.text.lower()
+					os.system("cd "+CfPh.dir)
+					os.system(prefix +" "+ file_name+ " " + str(event.user_id)+" '"+request + "'"+postfix)
+	except Exception as ex:
+		print("exeption" + ex)
+		main()
+
+main()
