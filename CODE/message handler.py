@@ -32,7 +32,6 @@ def main():
 				if event.to_me:
 					request = event.text.lower()
 					os.system("cd "+CfPh.dir)
-					print(prefix +" "+ file_name+ " " + str(event.user_id)+" '"+request + "'"+postfix)
 					os.system(prefix +" "+ file_name+ " " + str(event.user_id)+" '"+request + "'"+postfix)
 	except Exception as ex:
 		print("exeption" + ex)

@@ -27,7 +27,7 @@ versions.read("versions.ini")
 version = config = CfPs.ConfigParser()
 version.read("version.ini")
 
-print("сравнение с текущей версией")
+print("\nсравнение с текущей версией")
 if (versions["current"]["version"]>version["current"]["version"]):
     print("найдена более новая версия")
     if ((os.name=='nt')and(versions["current"]["for_windows"]=="true"))or((os.name=='posix')and(versions["current"]["for_linux"]=="true")):
