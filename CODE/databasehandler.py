@@ -89,6 +89,7 @@ try:
 		tbl = cursor.fetchall()
 
 		if not("null" in tbl[0]):
+			b = True
 			msg = disassemble(tbl)
 		else:
 			func = "select "+config["signals"]["AddInfo"]+"(%s, %s) as second"

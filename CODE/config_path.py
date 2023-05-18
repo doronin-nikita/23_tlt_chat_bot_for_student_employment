@@ -8,7 +8,7 @@ def get_config():
     #a1 = os.path.basename(__file__)
     #dir_h = os.path.abspath(__file__).replace(a1, '')
     config = CfPs.ConfigParser()
-    config.read("settings.ini") #config.read("'"+dir_h+"settings.ini'")
+    config.read(dir+"/settings.ini") #config.read("'"+dir_h+"settings.ini'")
     #print("'"+dir_h+"settings.ini'")
     #print(config.items())
     return config

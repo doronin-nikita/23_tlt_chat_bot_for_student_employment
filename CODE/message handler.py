@@ -20,7 +20,7 @@ def get_random_id():
 def write_msg(user_id, message):
     vk.method('messages.send', {'user_id': user_id, 'message': message, "random_id":get_random_id()})
 
-token = "311b05cafb4ba7002cd5ec05a2f8b6052e79a46e4add3b48a07f6ad8e728b991077ae63019d36a19c0b7b"
+#token = "311b05cafb4ba7002cd5ec05a2f8b6052e79a46e4add3b48a07f6ad8e728b991077ae63019d36a19c0b7b"
 
 def main():
 	try:
@@ -32,6 +32,7 @@ def main():
 				if event.to_me:
 					request = event.text.lower()
 					os.system("cd "+CfPh.dir)
+					print(prefix +" "+ file_name+ " " + str(event.user_id)+" '"+request + "'"+postfix)
 					os.system(prefix +" "+ file_name+ " " + str(event.user_id)+" '"+request + "'"+postfix)
 	except Exception as ex:
 		print("exeption" + ex)
