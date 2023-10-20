@@ -19,11 +19,6 @@ butns = {}
 
 def add_next_state(state, x, y, a, b):
     global butns
-    print(state, end=', \ta:')
-    print(a, end=', \tb:')
-    print(b, end=', \tx:')
-    print(x, end=', \ty:')
-    print(y, end='\n')
     i = ''
     if state in butns:
         i = 0
@@ -36,49 +31,51 @@ def add_next_state(state, x, y, a, b):
             'button':Button(text=str(state))
         }
     for msg in msgToDoNet[state]:
-        if (len(msgToDoNet[state][msg]['next_state'])>0):
-            n = (b-a)/len(msgToDoNet[state][msg]['next_state'])
-            l = a
+        n = len(msgToDoNet[state][msg]['next_state'])
+        
+        if n>0:
+            h = 500/n
         else:
-            n=0
+            h =0
+        x0 = (-h)*(n/3)
         for next_state in msgToDoNet[state][msg]['next_state']:
-            add_next_state(next_state, 100+x, y, l, (b-a)/n+l)
-            l+=n
+            canvas.create_line(x+50, y+25, x+x0+50, y+125)
+
+            add_next_state(next_state,  x+x0, y+100, 1, 1+n)
+            x0+=h
 
 def init():
     global butns
-    add_next_state(state="None", x=200, y=200, a = 0, b=2*pi)
+    add_next_state(state="None", x=200, y=200, a = 0.25*pi, b=0.75*pi)
     for state in butns:
         print(state+": x="+str(butns[state]['X'])+" y="+str(butns[state]['Y']))
-        butns[state]['button'].place(x=butns[state]['X'],y=butns[state]['X'])
+        butns[state]['button'].place(x=butns[state]['X'],y=butns[state]['Y'])
     print(list(butns))
 
 def remove():
     global dif_x, dif_y, butns
-    '''
+    
     for state in butns: 
-        butns[state]['X']+=dif_x/100
-        butns[state]['Y']+=dif_y/100
-        butns[state]['button'].place(x=butns[state]['X'],y=butns[state]['X'])
-    '''
+        butns[state]['X']-=dif_x/10
+        butns[state]['Y']-=dif_y/10
+        butns[state]['button'].place(x=butns[state]['X'],y=butns[state]['Y'])
+    
 
 pred_x, pred_y = 200, 200
 def on_mouse_down(event):
     global dif_x, dif_y, pred_x, pred_y
-    dif_x, dif_y = pred_x - event.x_root, pred_y - event.y_root
     pred_x, pred_y = event.x_root, event.y_root
 
 
 def update_position(event):
+    global dif_x, dif_y, pred_x, pred_y
+    dif_x, dif_y = pred_x - event.x_root, pred_y - event.y_root
+    pred_x, pred_y = event.x_root, event.y_root
     remove()
 
 
 canvas = Canvas(root, bg='white', width=500, height=500)
 canvas.pack()
-
-Button(text='1').place(x= 10, y = 20)
-Button(text='2').place(x=110, y = 20)
-Button(text='3').place(x=210, y = 20)
 
 canvas.bind('<ButtonPress-1>', on_mouse_down)
 canvas.bind('<B1-Motion>', update_position)

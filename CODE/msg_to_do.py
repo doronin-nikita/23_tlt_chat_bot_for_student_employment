@@ -48,6 +48,12 @@ def get_vakansii(write, id, connection, cursor):
     connection.commit()
     write(txt=msg, kb=2)
 
+def get_сompanys(write, id, connection, cursor):
+    cursor.callproc('Companys',(id,''))
+    connection.commit()
+    msg = disassemble(cursor.fetchall())
+    write(txt=msg, kb=1)
+
 def next_vakansii(write, id, connection, cursor):
     cursor.callproc('NextVakansi',(id,''))
     connection.commit()
@@ -90,7 +96,7 @@ msgToDoNet = {
     },
     'MainMenu':{
         'вакансии':     get_vakansii,
-        'организации':  sart_do,
+        'организации':  get_сompanys,
         'сброс':        clear_user,
         '...':          other_is_help
     },

@@ -2,7 +2,8 @@
 @brief Точка входа для работы бота, здесь задаются параметры с которыми будет запушено ядро бота
 '''
 from configparser import ConfigParser
-from os import path
+from os import path, execv
+import sys
 from pymysql import connect, cursors
 from bot_core import Core
 
@@ -72,7 +73,11 @@ def run_client():
     save_config()
     core = Core(pswd, kwargs=config)
     core.run_listening()
-    
-run_client()
+
+try:
+    run_client()
+except Exception as ex:
+    print(ex)
+    execv(sys.argv[0], sys.argv)
 
 
