@@ -12,7 +12,7 @@ from math import sin, cos
 pi = 3.14
 
 root = Tk()
-root.geometry("500x500")
+root.geometry("900x500")
 root.title("MyStateViwer")
 
 butns = {}
@@ -31,14 +31,15 @@ def add_next_state(state, x, y, w):
             'Y':y,
             'button':Button(text=str(state))
         }
+    n = 0
     for msg in msgToDoNet[state]:
-        n = len(msgToDoNet[state][msg]['next_state'])
-        
-        if n>0:
-            h = w/n
-        else:
-            h =0
-        x0 = (-h)*(n/3)
+        n += len(msgToDoNet[state][msg]['next_state'])
+    if n>0:
+        h = w/n
+    else:
+        h =0
+    x0 = (-h)*(n/3)
+    for msg in msgToDoNet[state]:
         for next_state in msgToDoNet[state][msg]['next_state']:
             lns.append(
                 {
@@ -50,8 +51,8 @@ def add_next_state(state, x, y, w):
                 }
                 
             )
-            add_next_state(next_state,  x+x0,y+100 , w -100)
-            x0+=h
+            add_next_state(next_state,  x+x0,y+100 , w -120)
+            x0+=h*2
 
 def init():
     global butns
@@ -89,7 +90,7 @@ def update_position(event):
     remove()
 
 
-canvas = Canvas(root, bg='white', width=500, height=500)
+canvas = Canvas(root, bg='white', width=900, height=500)
 canvas.pack()
 
 canvas.bind('<ButtonPress-1>', on_mouse_down)
