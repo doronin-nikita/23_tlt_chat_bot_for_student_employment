@@ -16,8 +16,9 @@ root.geometry("500x500")
 root.title("MyStateViwer")
 
 butns = {}
+lns = []
 
-def add_next_state(state, x, y, a, b):
+def add_next_state(state, x, y, w):
     global butns
     i = ''
     if state in butns:
@@ -34,19 +35,27 @@ def add_next_state(state, x, y, a, b):
         n = len(msgToDoNet[state][msg]['next_state'])
         
         if n>0:
-            h = 500/n
+            h = w/n
         else:
             h =0
         x0 = (-h)*(n/3)
         for next_state in msgToDoNet[state][msg]['next_state']:
-            canvas.create_line(x+50, y+25, x+x0+50, y+125)
-
-            add_next_state(next_state,  x+x0, y+100, 1, 1+n)
+            lns.append(
+                {
+                    'X0':x+50,
+                    'Y0':y+25,
+                    'X' :x+x0+50,
+                    'Y' :y+125,
+                    'line': canvas.create_line(x+50, y+25, x+x0+50, y+125)
+                }
+                
+            )
+            add_next_state(next_state,  x+x0,y+100 , w -100)
             x0+=h
 
 def init():
     global butns
-    add_next_state(state="None", x=200, y=200, a = 0.25*pi, b=0.75*pi)
+    add_next_state(state="None", x=200, y=200, w = 300)
     for state in butns:
         print(state+": x="+str(butns[state]['X'])+" y="+str(butns[state]['Y']))
         butns[state]['button'].place(x=butns[state]['X'],y=butns[state]['Y'])
@@ -54,7 +63,13 @@ def init():
 
 def remove():
     global dif_x, dif_y, butns
-    
+    for ln in lns:
+        canvas.delete(ln['line'])
+        ln['X0']-=dif_x/10
+        ln['Y0']-=dif_y/10
+        ln['X' ]-=dif_x/10
+        ln['Y' ]-=dif_y/10
+        ln['line']=canvas.create_line(ln['X0'], ln['Y0'], ln['X'], ln['Y'])
     for state in butns: 
         butns[state]['X']-=dif_x/10
         butns[state]['Y']-=dif_y/10
