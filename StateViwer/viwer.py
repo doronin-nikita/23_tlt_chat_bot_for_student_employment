@@ -6,8 +6,9 @@ from msg_to_do import msgToDoNet
 #from tkinter import *
 #from tkinter.ttk import Button, Canvas
 
-from tkinter import *
+from tkinter import Tk, Canvas, Label, Toplevel, Entry, INSERT, Text
 from tkinter.ttk import Button
+from inspect import getsource
 from math import sin, cos
 pi = 3.14
 
@@ -17,6 +18,25 @@ root.title("MyStateViwer")
 
 butns = {}
 lns = []
+lbls = []
+
+def sub_window(state):
+    T = Toplevel()
+    T.geometry("600x900")
+    T.title(state)
+    current_row = 1
+    for msg in msgToDoNet[state]:
+        Label(T, text="msg:").grid(row=current_row, column=0, in_=T)
+        msg_name= Entry(T, bg="#9BC2E6")
+        msg_name.insert(INSERT, msg)
+        msg_name.grid(row=current_row, column=1,columnspan=2, in_=T)
+        current_row+=1
+        Label(T, text="proc:").grid(row=current_row, column=0,columnspan=2, in_=T)
+        current_row+=1
+        msg_name= Text(T,width=70, height=10)
+        msg_name.insert(INSERT, getsource(msgToDoNet[state][msg]['proc']))
+        msg_name.grid(row=current_row,rowspan=2, column=0,columnspan=2, in_=T)
+        current_row+=4
 
 def add_next_state(state, x, y, w):
     global butns
@@ -29,7 +49,7 @@ def add_next_state(state, x, y, w):
     butns[new_state] = {
             'X':x,
             'Y':y,
-            'button':Button(text=str(state))
+            'button':Button(text=str(state), command=lambda st=state: sub_window(st))
         }
     n = 0
     for msg in msgToDoNet[state]:
@@ -51,6 +71,14 @@ def add_next_state(state, x, y, w):
                 }
                 
             )
+            lbls.append(
+                {
+                    'X':(x+x+x0+100)/2 - 25,
+                    'Y':(y+y+150)/2 - 25,
+                    'lbl':Label(text=msg, bg='azure')
+
+                }
+            )
             add_next_state(next_state,  x+x0,y+100 , w -120)
             x0+=h*2
 
@@ -58,9 +86,10 @@ def init():
     global butns
     add_next_state(state="None", x=200, y=200, w = 300)
     for state in butns:
-        print(state+": x="+str(butns[state]['X'])+" y="+str(butns[state]['Y']))
         butns[state]['button'].place(x=butns[state]['X'],y=butns[state]['Y'])
-    print(list(butns))
+    for lbl in lbls:
+        lbl['lbl'].place(x=lbl['X'],y=lbl['Y'])
+
 
 def remove():
     global dif_x, dif_y, butns
@@ -75,7 +104,10 @@ def remove():
         butns[state]['X']-=dif_x/10
         butns[state]['Y']-=dif_y/10
         butns[state]['button'].place(x=butns[state]['X'],y=butns[state]['Y'])
-    
+    for lbl in lbls:
+        lbl['X']-=dif_x/10
+        lbl['Y']-=dif_y/10
+        lbl['lbl'].place(x=lbl['X'],y=lbl['Y'])
 
 pred_x, pred_y = 200, 200
 def on_mouse_down(event):
@@ -97,5 +129,4 @@ canvas.bind('<ButtonPress-1>', on_mouse_down)
 canvas.bind('<B1-Motion>', update_position)
 
 init()
-
 root.mainloop()
