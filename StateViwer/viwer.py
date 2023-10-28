@@ -6,7 +6,7 @@ from msg_to_do import msgToDoNet
 #from tkinter import *
 #from tkinter.ttk import Button, Canvas
 
-from tkinter import Tk, Canvas, Label, Toplevel, Entry, INSERT, Text
+from tkinter import Tk, Canvas, Label, Toplevel, Entry, INSERT, Text, Frame, Scrollbar, BOTH, BOTTOM, LEFT, VERTICAL, RIGHT, ALL, X, Y
 from tkinter.ttk import Button
 from inspect import getsource
 from math import sin, cos
@@ -22,20 +22,34 @@ lbls = []
 
 def sub_window(state):
     T = Toplevel()
-    T.geometry("600x900")
+    T.geometry("600x400")
     T.title(state)
+
+    main_frame = Frame(T)
+    main_frame.pack(fill=BOTH,expand=1)
+    sec = Frame(main_frame)
+    sec.pack(fill=X,side=BOTTOM)
+    my_canvas = Canvas(main_frame)
+    my_canvas.pack(side=LEFT,fill=BOTH,expand=1)
+    y_scrollbar = Scrollbar(main_frame,orient=VERTICAL,command=my_canvas.yview)
+    y_scrollbar.pack(side=RIGHT,fill=Y)
+    my_canvas.configure(yscrollcommand=y_scrollbar.set)
+    my_canvas.bind("<Configure>",lambda e: my_canvas.config(scrollregion= my_canvas.bbox(ALL)))
+    second_frame = Frame(my_canvas)
+    my_canvas.create_window((0,0),window= second_frame, anchor="nw")
+
     current_row = 1
     for msg in msgToDoNet[state]:
-        Label(T, text="msg:").grid(row=current_row, column=0, in_=T)
+        Label(T, text="msg:").grid(row=current_row, column=0, in_=second_frame)
         msg_name= Entry(T, bg="#9BC2E6")
         msg_name.insert(INSERT, msg)
-        msg_name.grid(row=current_row, column=1,columnspan=2, in_=T)
+        msg_name.grid(row=current_row, column=1,columnspan=2, in_=second_frame)
         current_row+=1
-        Label(T, text="proc:").grid(row=current_row, column=0,columnspan=2, in_=T)
+        Label(T, text="proc:").grid(row=current_row, column=0,columnspan=2, in_=second_frame)
         current_row+=1
         msg_name= Text(T,width=70, height=10)
         msg_name.insert(INSERT, getsource(msgToDoNet[state][msg]['proc']))
-        msg_name.grid(row=current_row,rowspan=2, column=0,columnspan=2, in_=T)
+        msg_name.grid(row=current_row,rowspan=2, column=0,columnspan=2, in_=second_frame)
         current_row+=4
 
 def add_next_state(state, x, y, w):
