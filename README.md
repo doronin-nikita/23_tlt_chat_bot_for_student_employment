@@ -11,4 +11,4 @@
 * директория StateViwer содержит прототип инструмента визуальной работы с переходами состояний клиента
 тестирование бота проводется в отдельной группе, для уточнения подробностей можно связаться с разработчиком
 
-также для проекта существует [документация](https://htmlpreview.github.io/?html/index.html)
+также для проекта существует [документация](https://htmlpreview.github.io/?https://github.com/doronin-nikita/23_tlt_chat_bot_for_student_employment/html/index.html)
