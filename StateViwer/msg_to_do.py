@@ -86,7 +86,9 @@ def clear_user(write, id, connection, cursor):
 
 msgToDoNet = {
     'None':{
-        'start': {'proc':sart_do, 'next_state':['NeedInst','MainMenu' ]}
+        'start': {'proc':sart_do, 'next_state':['NeedInst','MainMenu' ]},
+        '?': {'proc':lambda kb_=4, **kwargs: help(kb_=kb_, **kwargs), 'next_state':['NeedInst','MainMenu' ]},
+        'help': {'proc':lambda kb_=4, **kwargs: help(kb_=kb_, **kwargs), 'next_state':['NeedInst','MainMenu' ]}
     },
     'MainMenu':{
         'вакансии':     {'proc':get_vakansii, 'next_state':['VakansiPlayer']},

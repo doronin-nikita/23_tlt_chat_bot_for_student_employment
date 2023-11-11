@@ -109,16 +109,27 @@ def clear_user(write, id, connection, cursor):
     connection.commit()
     write(txt='вы удалены', kb=4)
      
+def help(write, id, connection, cursor, kb_,state_):
+    result = "доступные вам комманды:"
+    for st in msgToDoNet[state_]:
+        result+="\n *:"+str(st)
+    write(txt=result, kb=kb_)
 
 msgToDoNet = {
     'None':{
-        'start': sart_do
+        'start': sart_do,
+        'начать': sart_do,
+        '?': lambda kb_=4, state_='None', **kwargs: help(kb_=kb_,state_=state_, **kwargs),
+        'help':  lambda kb_=1, state_='MainMenu', **kwargs: help(kb_=kb_,state_=state_, **kwargs),
     },
     'MainMenu':{
         'вакансии':     get_vakansii,
         'организации':  get_сompanys,
         'сброс':        clear_user,
+        '?': lambda kb_=1, state_='MainMenu', **kwargs: help(kb_=kb_,state_=state_, **kwargs),
+        'help':  lambda kb_=1, state_='MainMenu', **kwargs: help(kb_=kb_,state_=state_, **kwargs),
         '...':          other_is_help
+        
     },
     'NeedInst':{
         'отключить': bot_off,
