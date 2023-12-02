@@ -86,28 +86,33 @@ def clear_user(write, id, connection, cursor):
 
 msgToDoNet = {
     'None':{
-        'start': {'proc':sart_do, 'next_state':['NeedInst','MainMenu' ], 'description':'fjudbdfjb dfjkbdfwjk'},
-        '?': {'proc':lambda kb_=4, **kwargs: help(kb_=kb_, **kwargs), 'next_state':['None_end']}
+        'start': {'proc':sart_do, 'next_state':['NeedInst','MainMenu', 'None_end1', 'None_end2']},
     },
     'MainMenu':{
-        'вакансии':     {'proc':get_vakansii, 'next_state':['VakansiPlayer']},
+        'вакансии':     {'proc':get_vakansii, 'next_state':['VakansiPlayer', 'MainMenu_end']},
         'организации':  {'proc':sart_do, 'next_state':[]},
         'сброс':        {'proc':clear_user, 'next_state':['None_end']},
-        '...':          {'proc':other_is_help, 'next_state':[]}
+        #'...':          {'proc':other_is_help, 'next_state':[]}
     },
     'NeedInst':{
         'отключить': {'proc':bot_off, 'next_state':['None_end']},
-        'институты': {'proc':get_insts, 'next_state':[]},
-        '...':       {'proc':other_insts, 'next_state':['MainMenu_end']}
+       # 'институты': {'proc':get_insts, 'next_state':[]},
+       #'...':       {'proc':other_insts, 'next_state':['MainMenu_end']}
     },
+        
     'VakansiPlayer':{
-        'следующая':    {'proc':next_vakansii, 'next_state':[]},
-        'главное меню': {'proc':go_main_menu, 'next_state':['MainMenu_end']}
+       'следующая':    {'proc':next_vakansii, 'next_state':[]},
+       'главное меню': {'proc':go_main_menu, 'next_state':['MainMenu_end']}
     },
-
+        
     ### для графики ###
+         'None_end1':     {'None':{'proc':go_main_menu, 'next_state':[]}},
+         'None_end2':     {'None':{'proc':go_main_menu, 'next_state':[]}},
+        
     'None_end':     {'None':{'proc':go_main_menu, 'next_state':[]}},
     'MainMenu_end': {'None':{'proc':go_main_menu, 'next_state':[]}},
     'NeedInst_end': {'None':{'proc':go_main_menu, 'next_state':[]}},
-    'None_end':     {'None':{'proc':go_main_menu, 'next_state':[]}},
-}
+    'NeedInst_end1': {'None':{'proc':go_main_menu, 'next_state':[]}},
+
+        }
+
